@@ -1,7 +1,14 @@
-One way to plot data from a .tsv file created from the getngrams.py script is to read the .tsv file into a pandas DataFrame object and call the .plot() option on it. For example, if you have a file called 'aluminum_copper_steel-eng_2012-1800-2000-3.tsv', open an IPython terminal in the directory with the file using the pylab inline plotting backend (e.g. ipython --pylab=inline). Then you can do something like the following to produce a plot of the data:
+One way to plot data from a .tsv file created from the getngrams.py script is
+to read the .tsv file into a pandas DataFrame object and call the .plot()
+option on it.
 
-```
+For example, with a file called 'aluminum_steel-eng_2012-1800-2000-3.tsv', open
+an IPython terminal in the directory with the file using the pylab inline
+plotting backend (e.g. ipython --pylab=inline). Then you can do something like
+the following to produce a plot of the data:
+
+"""
 from pandas import read_csv
-df = read_csv('aluminum_copper_steel-eng_2012-1800-2000-3.tsv', sep='\t', index_col=0)
+df = read_csv('aluminum_steel-eng_2012-1800-2000-3.tsv', sep='\t', index_col=0)
 df.plot()
-```
+"""
