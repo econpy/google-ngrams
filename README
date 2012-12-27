@@ -10,12 +10,11 @@ Note to savvy users:
 (3) Known caveat: quotation marks are removed from the input query. 
 
 Example usage:
-  Albert Einstein, Charles Darwin
-  burnt_VERB/(burnt_VERB+burned)
-  Pearl Harbor, Watergate -corpus=eng_2009 -nosave 
-  bells and whistles -startYear=1900 -endYear=2001 -smoothing=2
-  -quit
-     
+  python getngrams.py Albert Einstein, Charles Darwin
+  python getngrams.py Pearl Harbor, Watergate -corpus=eng_2009 -nosave 
+  python getngrams.py bells and whistles -startYear=1900 -endYear=2001 -smoothing=2
+  python getngrams.py aluminum, copper, steel -noprint -quit
+
 Flags:
   -corpus=CORPUS [default: eng_2012]
      this will run the query in CORPUS. Possible values are  
