@@ -64,7 +64,7 @@ def runQuery(argumentString):
             print url
             for d in data:
                 try:
-                    print '%d,'%int(d[0])+','.join([str(s) for s in d[1:]])
+                    print '%d,' % int(d[0]) + ','.join([str(s) for s in d[1:]])
                 except:
                     print ','.join([str(s) for s in d])
         if toSave:
@@ -78,10 +78,10 @@ if __name__ == '__main__':
     if '-quit' in argumentString.split():
         runQuery(argumentString)    
     if argumentString == '':
-        argumentString = raw_input('Please enter an ngram query (or -help, or -quit):')
+        argumentString = raw_input('Enter query (or -help, or -quit):')
     while '-quit' not in argumentString.split():
         try:
             runQuery(argumentString)
         except:
             print 'An error occurred.'
-        argumentString = raw_input('Please enter an ngram query (or -help, or -quit):')
+        argumentString = raw_input('Enter query (or -help, or -quit):')
