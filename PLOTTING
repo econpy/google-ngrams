@@ -7,10 +7,14 @@ pylab inline plotting backend (e.g. ipython --pylab=inline). Then you can do
 something like the following to produce a plot:
 
 """
+#!/usr/bin/env python
 from pandas import read_csv
+
 df = read_csv('aluminum_copper_steel_zinc-eng_2012-1800-2000-3.tsv', sep='\t', index_col=0)
 df.plot()
+
 """
 
 which will produce an image like this:
-http://ngramplots.commondatastorage.googleapis.com/aluminum_copper_steel_zinc.png
+
+  http://ngramplots.commondatastorage.googleapis.com/aluminum_copper_steel_zinc.png
