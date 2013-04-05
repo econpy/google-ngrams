@@ -1,9 +1,12 @@
 #!/usr/bin/env python
-import ast
-import pandas    # http://github.com/pydata/pandas
-import re
-import requests  # http://github.com/kennethreitz/requests
-import sys
+from ast import literal_eval
+from urllib import urlopen
+from re import findall
+from sys import argv
+
+from pandas import DataFrame
+
+
 
 corpora = dict(eng_us_2012=17, eng_us_2009=5, eng_gb_2012=18, eng_gb_2009=6, 
                chi_sim_2012=23, chi_sim_2009=11,eng_2012=15, eng_2009=0,
@@ -16,15 +19,15 @@ corpora = dict(eng_us_2012=17, eng_us_2009=5, eng_gb_2012=18, eng_gb_2009=6,
 def getNgrams(query, corpus, startYear, endYear, smoothing):
     params = dict(content=query, year_start=startYear, year_end=endYear,
                   corpus=corpora[corpus], smoothing=smoothing)
-    req = requests.get('http://books.google.com/ngrams/graph', params=params)
-    response = req.content
-    res = re.findall('data.addRows(.*?);', response.replace('\n',''))
-    data = ast.literal_eval(res[0])
+    req = urlopen('http://books.google.com/ngrams/graph', params=params)
+    html = req.read()
+    res = findall('data.addRows(.*?);', html.replace('\n',''))
+    data = literal_eval(res[0])
     return req.url, params['content'], data
 
 
 def saveData(fname, query, data, url):
-    df = pandas.DataFrame(data)
+    df = DataFrame(data)
     df.columns = ['year'] + [q.strip() for q in query.split(',')]
     df.to_csv(fname, index=False, sep='\t')
 
@@ -74,7 +77,7 @@ def runQuery(argumentString):
             print 'Data saved to %s' % filename
 
 if __name__ == '__main__':
-    argumentString = ' '.join(sys.argv[1:])
+    argumentString = ' '.join(argv[1:])
     if '-quit' in argumentString.split():
         runQuery(argumentString)    
     if argumentString == '':
