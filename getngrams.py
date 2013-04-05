@@ -1,12 +1,10 @@
 #!/usr/bin/env python
 from ast import literal_eval
-from urllib import urlopen
-from re import findall
-from sys import argv
+import re
+import sys
 
-from pandas import DataFrame
-
-
+from pandas import DataFrame # http://github.com/pydata/pandas
+import requests              # http://github.com/kennethreitz/requests
 
 corpora = dict(eng_us_2012=17, eng_us_2009=5, eng_gb_2012=18, eng_gb_2009=6, 
                chi_sim_2012=23, chi_sim_2009=11,eng_2012=15, eng_2009=0,
@@ -19,9 +17,9 @@ corpora = dict(eng_us_2012=17, eng_us_2009=5, eng_gb_2012=18, eng_gb_2009=6,
 def getNgrams(query, corpus, startYear, endYear, smoothing):
     params = dict(content=query, year_start=startYear, year_end=endYear,
                   corpus=corpora[corpus], smoothing=smoothing)
-    req = urlopen('http://books.google.com/ngrams/graph', params=params)
-    html = req.read()
-    res = findall('data.addRows(.*?);', html.replace('\n',''))
+    req = requests.get('http://books.google.com/ngrams/graph', params=params)
+    response = req.content
+    res = re.findall('data.addRows(.*?);', response.replace('\n',''))
     data = literal_eval(res[0])
     return req.url, params['content'], data
 
@@ -77,7 +75,7 @@ def runQuery(argumentString):
             print 'Data saved to %s' % filename
 
 if __name__ == '__main__':
-    argumentString = ' '.join(argv[1:])
+    argumentString = ' '.join(sys.argv[1:])
     if '-quit' in argumentString.split():
         runQuery(argumentString)    
     if argumentString == '':
