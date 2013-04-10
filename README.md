@@ -3,8 +3,8 @@ This is a basic python code to retrieve data behind trajectories plotted on the 
 
 Just type exactly the same string you would have type on books.google.com/ngrams, and retrieve the data in tsv format. By default, data is printed on screen and saved to file in the current directory.
 
- 1. You can directly pass queries as arguments to the python script, such as "python getNgrams.py awesome".
- 2. If you pass the '-quit' flag as an argument, the program will run once and quit without asking for more input, such as "python getNgrams.py awesome, sauce -quit".     
+ 1. You can directly pass queries as arguments to the python script, such as "python getngrams.py awesome".
+ 2. If you pass the '-quit' flag as an argument, the program will run once and quit without asking for more input, such as "python getngrams.py awesome, sauce -quit".     
  3. Known caveat: quotation marks are removed from the input query. 
 
 ### Example Usage ###
@@ -17,33 +17,42 @@ python getngrams.py aluminum, copper, steel -noprint -quit
 ```
 
 ### Flags ###
-  *corpus=CORPUS [default: eng_2012]
-     this will run the query in CORPUS. Possible values are  
-     recapitulated below, and here http://books.google.com/ngrams/info.  
-  *startYear=YEAR [default: 1800]
-     start the query in YEAR (integer). 
-  *endYear=YEAR [default: 2000]
-     ends the query in YEAR (integer).
-  *smoothing=SMOOTHING [default: 3]
-     smoothing parameter (integer). Minimum is 0. 
-  *nosave
-     results will not be saved to file.
-  *noprint
-     results will not be printed on screen.
-  *help
-     prints this screen.
-  *quit
-     quits. 
+  * corpus=CORPUS [default: **eng_2012**] *This will run the query in CORPUS. Possible values are recapitulated below and [here](http://books.google.com/ngrams/info)*
+  * startYear=YEAR [default: **1800**]
+  * endYear=YEAR [default: **2000**]
+  * smoothing=SMOOTHING [default: **3**] *Smoothing parameter (integer). Minimum is 0.*
+  * nosave *Results will not be saved to file*
+  * noprint *Results will not be printed on screen*
+  * help *Prints this screen*
+  * quit *Quits after running query*
 
 ### Possible Corpora ###
-  eng_2012, eng_2009, eng_us_2012, eng_us_2009, eng_gb_2012, eng_gb_2009, 
-  chi_sim_2012, chi_sim_2009, fre_2012, fre_2009, ger_2012, ger_2009,
-  spa_2012, spa_2009, rus_2012, rus_2009, heb_2012, heb_2009, ita_2012,    
-  eng_fiction_2012, eng_fiction_2009, eng_1m_2009
+
+```
+eng_2012, eng_2009, eng_us_2012, eng_us_2009, eng_gb_2012, eng_gb_2009, chi_sim_2012, chi_sim_2009, fre_2012, fre_2009, ger_2012, ger_2009, spa_2012, spa_2009, rus_2012, rus_2009, heb_2012, heb_2009, ita_2012, eng_fiction_2012, eng_fiction_2009, eng_1m_2009
+```
+
+### Plotting ###
+One way to plot data from a .tsv file created from the getngrams.py script is
+to read the .tsv file into a pandas DataFrame object and call the .plot()
+option on it.
+
+For example, open an IPython terminal in the directory with a .tsv file with a
+pylab inline plotting backend (e.g. ipython --pylab=inline). Then you can do
+something like the following to produce a plot:
+
+```python
+import pandas
+df = pandas.read_csv('aluminum_copper_steel_zinc-eng_2012-1800-2000-3.tsv', sep='\t', index_col=0)
+df.plot()
+```
+
+which will produce an image like this:
+![](http://ngramplots.commondatastorage.googleapis.com/aluminum_copper_steel_zinc.png)
 
 ### License ###
 None, feel free to distribute and modify.
 
-However, PLEASE do respect the terms of service of the Google Books Ngram Viewer while using this code. This code is meant to help viewers retrieve data behind a few queries, not bang at Google's  servers with thousands of queries. The complete dataset can be freely downloaded here: http://storage.googleapis.com/books/ngrams/books/datasetsv2.html. This code is not a Google product and is not endorsed by Google in any way. 
+However, PLEASE do respect the terms of service of the Google Books Ngram Viewer while using this code. This code is meant to help viewers retrieve data behind a few queries, not bang at Google's  servers with thousands of queries. The complete dataset can be freely downloaded [here](http://storage.googleapis.com/books/ngrams/books/datasetsv2.html). This code is not a Google product and is not endorsed by Google in any way. 
 
 With this in mind... happy plotting!
