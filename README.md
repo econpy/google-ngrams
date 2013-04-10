@@ -17,14 +17,14 @@ python getngrams.py aluminum, copper, steel -noprint -quit
 ```
 
 ### Flags ###
-  * corpus=CORPUS [default: **eng_2012**] *This will run the query in CORPUS. Possible values are recapitulated below and [here](http://books.google.com/ngrams/info)*
-  * startYear=YEAR [default: **1800**]
-  * endYear=YEAR [default: **2000**]
-  * smoothing=SMOOTHING [default: **3**] *Smoothing parameter (integer). Minimum is 0.*
-  * nosave *Results will not be saved to file*
-  * noprint *Results will not be printed on screen*
-  * help *Prints this screen*
-  * quit *Quits after running query*
+  * **corpus** [default: eng_2012] *This will run the query in CORPUS. Possible values are recapitulated below and [here](http://books.google.com/ngrams/info)*
+  * **startYear** [default: 1800]
+  * **endYear** [default: 2000]
+  * **smoothing** [default: 3] *Smoothing parameter (integer). Minimum is 0.*
+  * **nosave** *Results will not be saved to file*
+  * **noprint** *Results will not be printed on screen*
+  * **help** *Prints this screen*
+  * **quit** *Quits after running query*
 
 ### Possible Corpora ###
 
