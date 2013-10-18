@@ -48,7 +48,7 @@ df.plot()
 ```
 
 which will produce an image like this:
-![](http://ngramplots.commondatastorage.googleapis.com/aluminum_copper_steel_zinc.png)
+![](https://s3.amazonaws.com/ngramplots/ngrams.png)
 
 ### License ###
 None, feel free to distribute and modify.
