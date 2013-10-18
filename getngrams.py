@@ -19,15 +19,11 @@ def getNgrams(query, corpus, startYear, endYear, smoothing):
                   corpus=corpora[corpus], smoothing=smoothing)
     req = requests.get('http://books.google.com/ngrams/graph', params=params)
     response = req.content
-    res = re.findall('data.addRows(.*?);', response.replace('\n',''))
-    data = literal_eval(res[0])
-    return req.url, params['content'], data
-
-
-def saveData(fname, query, data, url):
+    res = re.findall('var data = (.*?);', response)
+    data = {qry['ngram']: qry['timeseries'] for qry in literal_eval(res[0])}
     df = DataFrame(data)
-    df.columns = ['year'] + [q.strip() for q in query.split(',')]
-    df.to_csv(fname, index=False, sep='\t')
+    df.insert(0, 'year', range(startYear, endYear+1))
+    return req.url, params['content'], df
 
 
 def runQuery(argumentString):
@@ -60,18 +56,18 @@ def runQuery(argumentString):
     if printHelp:
         print 'See README file.'
     else:
-        url, urlquery, data = getNgrams(query, corpus, startYear, endYear, smoothing)
+        url, urlquery, df = getNgrams(query, corpus, startYear, endYear, smoothing)
         if toPrint:
             print url
-            for d in data:
+            for row in df.iterrows():
                 try:
-                    print '%d,' % int(d[0]) + ','.join([str(s) for s in d[1:]])
+                    print '%d,' % int(row[1].values[0]) + ','.join(['%.9f' % s for s in row[1].values[1:]])
                 except:
-                    print ','.join([str(s) for s in d])
+                    print ','.join([str(s) for s in row[1].values])
         if toSave:
             queries = ''.join(urlquery.replace(',', '_').split())
-            filename = '%s-%s-%d-%d-%d.tsv' % (queries, corpus, startYear, endYear, smoothing)
-            saveData(filename, urlquery, data, url)
+            filename = '%s-%s-%d-%d-%d.csv' % (queries, corpus, startYear, endYear, smoothing)
+            df.to_csv(filename, index=False)
             print 'Data saved to %s' % filename
 
 if __name__ == '__main__':
