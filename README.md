@@ -33,17 +33,17 @@ eng_2012, eng_2009, eng_us_2012, eng_us_2009, eng_gb_2012, eng_gb_2009, chi_sim_
 ```
 
 ### Plotting ###
-One way to plot data from a .tsv file created from the getngrams.py script is
-to read the .tsv file into a pandas DataFrame object and call the .plot()
+One way to plot data from a .csv file created from the getngrams.py script is
+to read the .csv file into a pandas DataFrame object and call the .plot()
 option on it.
 
-For example, open an IPython terminal in the directory with a .tsv file with a
+For example, open an IPython terminal in the directory with a .csv file with a
 pylab inline plotting backend (e.g. ipython --pylab=inline). Then you can do
 something like the following to produce a plot:
 
 ```python
 import pandas
-df = pandas.read_csv('aluminum_copper_steel_zinc-eng_2012-1800-2000-3.tsv', sep='\t', index_col=0)
+df = pandas.read_csv('aluminum_copper_steel_zinc-eng_2012-1800-2000-3.csv', index_col=0, parse_dates=True)
 df.plot()
 ```
 
