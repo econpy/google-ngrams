@@ -20,6 +20,8 @@ def getNgrams(query, corpus, startYear, endYear, smoothing, caseInsensitive):
                   case_insensitive=caseInsensitive)
     if params['case_insensitive'] == 'off':
         params.pop('case_insensitive')
+    if '^' in params['content']:
+        params['content'] = params['content'].replace('^', '*')
     req = requests.get('http://books.google.com/ngrams/graph', params=params)
     response = req.content
     res = re.findall('var data = (.*?);', response)
@@ -32,6 +34,8 @@ def getNgrams(query, corpus, startYear, endYear, smoothing, caseInsensitive):
 def runQuery(argumentString):
     arguments = argumentString.split()
     query = ' '.join([arg for arg in arguments if not arg.startswith('-')])
+    if '^' in query:
+        query = query.replace('^', '*')
     params = [arg for arg in arguments if arg.startswith('-')]
     corpus, startYear, endYear, smoothing = 'eng_2012', 1800, 2000, 3
     caseInsensitive = 'off'
@@ -62,8 +66,17 @@ def runQuery(argumentString):
     if printHelp:
         print 'See README file.'
     else:
+        if '*' in query and caseInsensitive == 'on':
+            caseInsensitive = 'off'
+            notifyUser = True
+        else:
+            notifyUser = False
         url, urlquery, df = getNgrams(query, corpus, startYear, endYear,
                                       smoothing, caseInsensitive)
+        if '*' in query:
+            for col in df.columns:
+                if '*' in col:
+                    df.pop(col)
         if caseInsensitive == 'on':
             for col in df.columns:
                 if col.count('(All)') == 0 and col != 'year':
@@ -72,6 +85,7 @@ def runQuery(argumentString):
                     clean_name = col.replace(' (All)', '')
                     df[clean_name] = df.pop(col)
         if toPrint:
+            print ','.join(df.columns.tolist())
             for row in df.iterrows():
                 try:
                     print '%d,' % int(row[1].values[0]) + \
@@ -80,11 +94,16 @@ def runQuery(argumentString):
                     print ','.join([str(s) for s in row[1].values])
         if toSave:
             queries = ''.join(urlquery.replace(',', '_').split())
+            if '*' in queries:
+                queries = queries.replace('*', 'WILDCARD')
             filename = '%s-%s-%d-%d-%d-%s.csv' % (queries, corpus, startYear,
                                                   endYear, smoothing,
                                                   caseInsensitive)
             df.to_csv(filename, index=False)
             print 'Data saved to %s' % filename
+        if notifyUser:
+            print "*NOTE: Wildcard and case-insensitive searches can't be " + \
+                  "combined, so the case-insensitive option was ignored."
 
 if __name__ == '__main__':
     argumentString = ' '.join(sys.argv[1:])
