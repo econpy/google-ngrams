@@ -21,18 +21,18 @@ python getngrams.py internet --startYear=1980 --endYear=2000 --corpus=eng_2012 -
 ```
 
 ### Flags ###
-  * **corpus** [default: eng_2012] *This will run the query in CORPUS. Possible values are recapitulated below and [here](http://books.google.com/ngrams/info)*
+  * **corpus** [default: eng_2012] *This will run the query in CORPUS. Possible values are recapitulated below and [here](http://books.google.com/ngrams/info).*
   * **startYear** [default: 1800]
   * **endYear** [default: 2000]
   * **smoothing** [default: 3] *Smoothing parameter (integer). Minimum is 0.*
   * **caseInsensitive** [default: off] *Set to 'on' for case-insensitive queries*
-  * **alldata** *Return every column of available data.**
+  * **alldata** *Return every column of available data.***
   * **nosave** *Results will not be saved to file*
   * **noprint** *Results will not be printed on screen*
   * **help** *Prints this screen*
   * **quit** *Quits after running query*
 
-\* This can be used with inflection, wildcard, and case-insensitive searches (otherwise it does nothing) where one column is the sum of some of the other columns (labeled with a column name ending in "(All)" or an asterisk for wildcard searches). In the [Google Ngram Viewer](http://books.google.com/ngrams), the columns whose sum makes up these column is viewable by right clicking on the ngram plot. In the `getngrams.py` script, these columns are dropped by default, but you can keep them by adding `-alldata` to your query.
+\*\* This can be used with inflection, wildcard, and case-insensitive searches (otherwise it does nothing) where one column is the sum of some of the other columns (labeled with a column name ending in "(All)" or an asterisk for wildcard searches). In the [Google Ngram Viewer](http://books.google.com/ngrams), the columns whose sum makes up these column is viewable by right clicking on the ngram plot. In the `getngrams.py` script, these columns are dropped by default, but you can keep them by adding `-alldata` to your query.
 
 ### More Complicated Examples ###
 
@@ -45,7 +45,7 @@ When doing a wildcard search, use the `?` character instead of the `*` character
 ```
 python getngrams.py United ? --startYear=1800 --endYear=2000 -alldata
 python getngrams.py University of ? -quit
-python getngrams.py University of ?, # State University -alldata -quit
+python getngrams.py University of ?, ? State University -alldata -quit
 ```
 
 ##### Modifier Searches #####
