@@ -6,17 +6,20 @@ import sys
 from pandas import DataFrame # http://github.com/pydata/pandas
 import requests              # http://github.com/kennethreitz/requests
 
-corpora = dict(eng_us_2012=17, eng_us_2009=5, eng_gb_2012=18, eng_gb_2009=6, 
-               chi_sim_2012=23, chi_sim_2009=11,eng_2012=15, eng_2009=0,
+corpora = dict(eng_us_2012=17, eng_us_2009=5, eng_gb_2012=18, eng_gb_2009=6,
+               chi_sim_2012=23, chi_sim_2009=11, eng_2012=15, eng_2009=0,
                eng_fiction_2012=16, eng_fiction_2009=4, eng_1m_2009=1,
                fre_2012=19, fre_2009=7, ger_2012=20, ger_2009=8, heb_2012=24,
                heb_2009=9, spa_2012=21, spa_2009=10, rus_2012=25, rus_2009=12,
                ita_2012=22)
 
 
-def getNgrams(query, corpus, startYear, endYear, smoothing):
+def getNgrams(query, corpus, startYear, endYear, smoothing, caseInsensitive):
     params = dict(content=query, year_start=startYear, year_end=endYear,
-                  corpus=corpora[corpus], smoothing=smoothing)
+                  corpus=corpora[corpus], smoothing=smoothing,
+                  case_insensitive=caseInsensitive)
+    if params['case_insensitive'] == 'off':
+        params.pop('case_insensitive')
     req = requests.get('http://books.google.com/ngrams/graph', params=params)
     response = req.content
     res = re.findall('var data = (.*?);', response)
@@ -31,8 +34,9 @@ def runQuery(argumentString):
     query = ' '.join([arg for arg in arguments if not arg.startswith('-')])
     params = [arg for arg in arguments if arg.startswith('-')]
     corpus, startYear, endYear, smoothing = 'eng_2012', 1800, 2000, 3
+    caseInsensitive = 'off'
     printHelp, toSave, toPrint = False, True, True
-    
+
     # parsing the query parameters
     for param in params:
         if '-nosave' in param:
@@ -46,7 +50,9 @@ def runQuery(argumentString):
         elif '-endYear' in param:
             endYear = int(param.split('=')[1])
         elif '-smoothing' in param:
-            smoothing = int(param.split('=')[1])    
+            smoothing = int(param.split('=')[1])
+        elif '-caseInsensitive' in param:
+            caseInsensitive = param.split('=')[1].strip()
         elif '-help' in param:
             printHelp = True
         elif '-quit' in param:
@@ -56,24 +62,34 @@ def runQuery(argumentString):
     if printHelp:
         print 'See README file.'
     else:
-        url, urlquery, df = getNgrams(query, corpus, startYear, endYear, smoothing)
+        url, urlquery, df = getNgrams(query, corpus, startYear, endYear,
+                                      smoothing, caseInsensitive)
+        if caseInsensitive == 'on':
+            for col in df.columns:
+                if col.count('(All)') == 0 and col != 'year':
+                    df.pop(col)
+                elif col.count('(All)') == 1:
+                    clean_name = col.replace(' (All)', '')
+                    df[clean_name] = df.pop(col)
         if toPrint:
-            print url
             for row in df.iterrows():
                 try:
-                    print '%d,' % int(row[1].values[0]) + ','.join(['%.9f' % s for s in row[1].values[1:]])
+                    print '%d,' % int(row[1].values[0]) + \
+                          ','.join(['%.12f' % s for s in row[1].values[1:]])
                 except:
                     print ','.join([str(s) for s in row[1].values])
         if toSave:
             queries = ''.join(urlquery.replace(',', '_').split())
-            filename = '%s-%s-%d-%d-%d.csv' % (queries, corpus, startYear, endYear, smoothing)
+            filename = '%s-%s-%d-%d-%d-%s.csv' % (queries, corpus, startYear,
+                                                  endYear, smoothing,
+                                                  caseInsensitive)
             df.to_csv(filename, index=False)
             print 'Data saved to %s' % filename
 
 if __name__ == '__main__':
     argumentString = ' '.join(sys.argv[1:])
     if '-quit' in argumentString.split():
-        runQuery(argumentString)    
+        runQuery(argumentString)
     if argumentString == '':
         argumentString = raw_input('Enter query (or -help, or -quit):')
     while '-quit' not in argumentString.split():
