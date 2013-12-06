@@ -3,8 +3,8 @@ from ast import literal_eval
 import re
 import sys
 
-from pandas import DataFrame # http://github.com/pydata/pandas
-import requests              # http://github.com/kennethreitz/requests
+from pandas import DataFrame  # http://github.com/pydata/pandas
+import requests               # http://github.com/kennethreitz/requests
 
 corpora = dict(eng_us_2012=17, eng_us_2009=5, eng_gb_2012=18, eng_gb_2009=6,
                chi_sim_2012=23, chi_sim_2009=11, eng_2012=15, eng_2009=0,
@@ -20,11 +20,12 @@ def getNgrams(query, corpus, startYear, endYear, smoothing, caseInsensitive):
                   case_insensitive=caseInsensitive)
     if params['case_insensitive'] == 'off':
         params.pop('case_insensitive')
-    if '^' in params['content']:
-        params['content'] = params['content'].replace('^', '*')
+    if '?' in params['content']:
+        params['content'] = params['content'].replace('?', '*')
+    if '@' in params['content']:
+        params['content'] = params['content'].replace('@', '=>')
     req = requests.get('http://books.google.com/ngrams/graph', params=params)
-    response = req.content
-    res = re.findall('var data = (.*?);', response)
+    res = re.findall('var data = (.*?);\\n', req.text)
     data = {qry['ngram']: qry['timeseries'] for qry in literal_eval(res[0])}
     df = DataFrame(data)
     df.insert(0, 'year', range(startYear, endYear+1))
@@ -34,12 +35,14 @@ def getNgrams(query, corpus, startYear, endYear, smoothing, caseInsensitive):
 def runQuery(argumentString):
     arguments = argumentString.split()
     query = ' '.join([arg for arg in arguments if not arg.startswith('-')])
-    if '^' in query:
-        query = query.replace('^', '*')
+    if '?' in query:
+        query = query.replace('?', '*')
+    if '@' in query:
+        query = query.replace('@', '=>')
     params = [arg for arg in arguments if arg.startswith('-')]
     corpus, startYear, endYear, smoothing = 'eng_2012', 1800, 2000, 3
     caseInsensitive = 'off'
-    printHelp, toSave, toPrint = False, True, True
+    printHelp, toSave, toPrint, allData = False, True, True, False
 
     # parsing the query parameters
     for param in params:
@@ -57,6 +60,8 @@ def runQuery(argumentString):
             smoothing = int(param.split('=')[1])
         elif '-caseInsensitive' in param:
             caseInsensitive = param.split('=')[1].strip()
+        elif '-alldata' in param:
+            allData = True
         elif '-help' in param:
             printHelp = True
         elif '-quit' in param:
@@ -69,21 +74,32 @@ def runQuery(argumentString):
         if '*' in query and caseInsensitive == 'on':
             caseInsensitive = 'off'
             notifyUser = True
+            warningMessage = "*NOTE: Wildcard and case-insensitive " + \
+                             "searches can't be combined, so the " + \
+                             "case-insensitive option was ignored."
+        elif '_INF' in query and caseInsensitive == 'on':
+            caseInsensitive = 'off'
+            notifyUser = True
+            warningMessage = "*NOTE: Inflected form and case-insensitive " + \
+                             "searches can't be combined, so the " + \
+                             "case-insensitive option was ignored."
         else:
             notifyUser = False
         url, urlquery, df = getNgrams(query, corpus, startYear, endYear,
                                       smoothing, caseInsensitive)
-        if '*' in query:
-            for col in df.columns:
-                if '*' in col:
-                    df.pop(col)
-        if caseInsensitive == 'on':
-            for col in df.columns:
-                if col.count('(All)') == 0 and col != 'year':
-                    df.pop(col)
-                elif col.count('(All)') == 1:
-                    clean_name = col.replace(' (All)', '')
-                    df[clean_name] = df.pop(col)
+        if not allData:
+            if caseInsensitive == 'on':
+                for col in df.columns:
+                    if col.count('(All)') == 0 and col != 'year':
+                        df.pop(col)
+            if '_INF' in query:
+                for col in df.columns:
+                    if '_INF' in col:
+                        df.pop(col)
+            if '*' in query:
+                for col in df.columns:
+                    if '*' in col:
+                        df.pop(col)
         if toPrint:
             print ','.join(df.columns.tolist())
             for row in df.iterrows():
@@ -93,6 +109,9 @@ def runQuery(argumentString):
                 except:
                     print ','.join([str(s) for s in row[1].values])
         if toSave:
+            for col in df.columns:
+                if '&gt;' in col:
+                    df[col.replace('&gt;', '>')] = df.pop(col)
             queries = ''.join(urlquery.replace(',', '_').split())
             if '*' in queries:
                 queries = queries.replace('*', 'WILDCARD')
@@ -102,8 +121,7 @@ def runQuery(argumentString):
             df.to_csv(filename, index=False)
             print 'Data saved to %s' % filename
         if notifyUser:
-            print "*NOTE: Wildcard and case-insensitive searches can't be " + \
-                  "combined, so the case-insensitive option was ignored."
+            print warningMessage
 
 if __name__ == '__main__':
     argumentString = ' '.join(sys.argv[1:])
