@@ -4,13 +4,18 @@ Here you'll find a basic python script to retrieve data behind the trajectories 
 Just type exactly the same string you would have typed at books.google.com/ngrams, and retrieve the data in csv format. By default, the data is printed on screen and saved to a file in the current directory.
 
  1. You can directly pass queries as arguments to the python script, such as "python getngrams.py awesome".
- 2. If you pass the '-quit' flag as an argument, the program will run once and quit without asking for more input, such as "python getngrams.py awesome, sauce -quit".     
- 3. Known caveat: quotation marks are removed from the input query. 
+ 2. If you pass the '-quit' flag as an argument, the program will run once and quit without asking for more input, such as "python getngrams.py awesome, sauce -quit".
+
+**Known Caveats**
+ 1. When doing a wildcard search, use the '^' character instead of '*'. If you use an asterisk the script will fail because your shell will expand the asterisk before Python has a chance to use it.
+ 2. Quotation marks are removed from the input query.
 
 ### Example Usage ###
 
 ```
 python getngrams.py Albert Einstein, Charles Darwin
+python getngrams.py University of ^ -noprint -quit
+python getngrams.py United ^, Canada --startYear=1800 --endYear=2000 -smoothing=4 -quit
 python getngrams.py internet --startYear=1980 --endYear=2000 --corpus=eng_2012 --caseInsensitive=on
 python getngrams.py Pearl Harbor, Watergate -corpus=eng_2009 -nosave 
 python getngrams.py bells and whistles -startYear=1900 -endYear=2001 -smoothing=2
@@ -43,7 +48,7 @@ to read the csv file into a pandas DataFrame object and call the .plot()
 option on it.
 
 For example, open an IPython terminal in the directory with a csv file with a
-pylab inline plotting backend (e.g. ipython --pylab=inline). Then you can do
+pylab inline plotting backend (e.g. ipython --pylab inline). Then you can do
 something like the following:
 
 ```python
