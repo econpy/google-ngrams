@@ -3,11 +3,11 @@ Here you'll find a basic python script to retrieve data behind the trajectories 
 
 Just type exactly the same string you would have typed at books.google.com/ngrams, and retrieve the data in csv format. By default, the data is printed on screen and saved to a file in the current directory.
 
- 1. You can directly pass queries as arguments to the python script, such as "python getngrams.py awesome".
- 2. If you pass the '-quit' flag as an argument, the program will run once and quit without asking for more input, such as "python getngrams.py awesome, sauce -quit".
+ - You can directly pass queries as arguments to the python script, such as "python getngrams.py awesome".
+ - If you pass the '-quit' flag as an argument, the program will run once and quit without asking for more input, such as "python getngrams.py awesome, sauce -quit".
 
-**Known Caveats**
- 1. When doing a wildcard search, use the '^' character instead of '*'. If you use an asterisk the script will fail because your shell will expand the asterisk before Python has a chance to use it.
+##### Known Caveats #####
+ 1. When doing a wildcard search, use the `^` character instead of the `*` character. Using an asterisk will cause the script to fail because your shell will expand the asterisk before Python has a chance to see it.
  2. Quotation marks are removed from the input query.
 
 ### Example Usage ###
