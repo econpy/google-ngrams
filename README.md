@@ -15,6 +15,7 @@ Just type exactly the same string you would have typed at books.google.com/ngram
 ```
 python getngrams.py Albert Einstein, Charles Darwin
 python getngrams.py University of ^ -noprint -quit
+python getngrams.py University of ^, ^ State University -quit
 python getngrams.py United ^, Canada --startYear=1800 --endYear=2000 -smoothing=4 -quit
 python getngrams.py internet --startYear=1980 --endYear=2000 --corpus=eng_2012 --caseInsensitive=on
 python getngrams.py Pearl Harbor, Watergate -corpus=eng_2009 -nosave 
