@@ -11,6 +11,7 @@ Just type exactly the same string you would have typed at books.google.com/ngram
 
 ```
 python getngrams.py Albert Einstein, Charles Darwin
+python getngrams.py internet --startYear=1980 --endYear=2000 --corpus=eng_2012 --caseInsensitive=on
 python getngrams.py Pearl Harbor, Watergate -corpus=eng_2009 -nosave 
 python getngrams.py bells and whistles -startYear=1900 -endYear=2001 -smoothing=2
 python getngrams.py aluminum, copper, steel -noprint -quit
@@ -21,6 +22,7 @@ python getngrams.py aluminum, copper, steel -noprint -quit
   * **startYear** [default: 1800]
   * **endYear** [default: 2000]
   * **smoothing** [default: 3] *Smoothing parameter (integer). Minimum is 0.*
+  * **caseInsensitive** [default: off] *Set to 'on' for case-insensitive queries*
   * **nosave** *Results will not be saved to file*
   * **noprint** *Results will not be printed on screen*
   * **help** *Prints this screen*
