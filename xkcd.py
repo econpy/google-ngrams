@@ -2,11 +2,7 @@ import matplotlib.pyplot as plt
 import matplotlib.font_manager as fm
 from matplotlib import cm
 from matplotlib.ticker import FuncFormatter
-from matplotlib.backends.backend_agg import FigureCanvasAgg as fc
-
-
-def addPercentSign(y_tick, pos=0):
-    return '%s%%' % y_tick
+from matplotlib.backends.backend_agg import FigureCanvasAgg
 
 
 def plotXKCD(ngramCSVfile):
@@ -18,12 +14,12 @@ def plotXKCD(ngramCSVfile):
         sp = line.strip().split(',')
         years.append(int(sp[0]))
         for i, s in enumerate(sp[1:]):
-            data_vals[i].append(float(s)*100) # Make percentage
+            data_vals[i].append(float(s)*100)  # Make percentage
     fin.close()
 
     # Set up a figure
     fig = plt.Figure()
-    canvas = fc(fig)
+    canvas = FigureCanvasAgg(fig)
     num_ngrams = len(ngrams)
 
     # Plot the data
@@ -41,7 +37,7 @@ def plotXKCD(ngramCSVfile):
     # Create the Humor-Sans font properties object
     prop = fm.FontProperties(fname='Humor-Sans.ttf')
 
-    # Create the legend
+    # Create the legend and change the font
     legend = ax.legend()
     for label in legend.get_texts():
         label.set_fontproperties(prop)
@@ -53,14 +49,13 @@ def plotXKCD(ngramCSVfile):
     # Setup subtitles
     file_str = ngramCSVfile.split('.')[0]
     file_parts = file_str.split('-')
-    bottom_title = '%s - %s | ' % (file_parts[2], file_parts[3])
-    if file_str.endswith('on'):
-        bottom_title += 'Case Insensitive | '
+    bottom_title = '%s - %s  /  ' % (file_parts[2], file_parts[3])
+    if file_str.endswith('caseInsensitive'):
+        bottom_title += 'Case Insensitive  /  '
     else:
-        bottom_title += 'Case Sensitive | '
-    bottom_title += 'Corpus: %s | ' % file_parts[1]
+        bottom_title += 'Case Sensitive  /  '
+    bottom_title += 'Corpus: %s  /  ' % file_parts[1]
     bottom_title += 'Smoothing: %s' % file_parts[4]
-
     ax.set_title(bottom_title, fontproperties=prop,
                  fontdict={'verticalalignment': 'bottom', 'fontsize': 10,
                            'color': '#787878'})
@@ -88,11 +83,11 @@ def plotXKCD(ngramCSVfile):
         label.set_fontproperties(prop)
 
     # Add percentage sign to y-axis ticks
-    ax.yaxis.set_major_formatter(FuncFormatter(addPercentSign))
+    ax.yaxis.set_major_formatter(FuncFormatter(lambda y, pos=0: '%s%%' % y))
 
     ax.axison = True
 
-    fig.savefig('%s.png' % file_str, dpi=250)
+    fig.savefig('%s.png' % file_str, dpi=300)
 
 if __name__ == '__main__':
     import sys

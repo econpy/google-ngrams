@@ -18,7 +18,7 @@ def getNgrams(query, corpus, startYear, endYear, smoothing, caseInsensitive):
     params = dict(content=query, year_start=startYear, year_end=endYear,
                   corpus=corpora[corpus], smoothing=smoothing,
                   case_insensitive=caseInsensitive)
-    if params['case_insensitive'] == 'off':
+    if params['case_insensitive'] is False:
         params.pop('case_insensitive')
     if '?' in params['content']:
         params['content'] = params['content'].replace('?', '*')
@@ -41,7 +41,7 @@ def runQuery(argumentString):
         query = query.replace('@', '=>')
     params = [arg for arg in arguments if arg.startswith('-')]
     corpus, startYear, endYear, smoothing = 'eng_2012', 1800, 2000, 3
-    caseInsensitive = 'off'
+    caseInsensitive = False
     printHelp, toSave, toPrint, allData = False, True, True, False
 
     # parsing the query parameters
@@ -59,7 +59,7 @@ def runQuery(argumentString):
         elif '-smoothing' in param:
             smoothing = int(param.split('=')[1])
         elif '-caseInsensitive' in param:
-            caseInsensitive = param.split('=')[1].strip()
+            caseInsensitive = True
         elif '-alldata' in param:
             allData = True
         elif '-help' in param:
@@ -71,14 +71,14 @@ def runQuery(argumentString):
     if printHelp:
         print 'See README file.'
     else:
-        if '*' in query and caseInsensitive == 'on':
-            caseInsensitive = 'off'
+        if '*' in query and caseInsensitive is True:
+            caseInsensitive = False
             notifyUser = True
             warningMessage = "*NOTE: Wildcard and case-insensitive " + \
                              "searches can't be combined, so the " + \
                              "case-insensitive option was ignored."
-        elif '_INF' in query and caseInsensitive == 'on':
-            caseInsensitive = 'off'
+        elif '_INF' in query and caseInsensitive is True:
+            caseInsensitive = False
             notifyUser = True
             warningMessage = "*NOTE: Inflected form and case-insensitive " + \
                              "searches can't be combined, so the " + \
@@ -88,10 +88,12 @@ def runQuery(argumentString):
         url, urlquery, df = getNgrams(query, corpus, startYear, endYear,
                                       smoothing, caseInsensitive)
         if not allData:
-            if caseInsensitive == 'on':
+            if caseInsensitive is True:
                 for col in df.columns:
                     if col.count('(All)') == 0 and col != 'year':
                         df.pop(col)
+                    elif col.count('(All)') == 1:
+                        df[col.replace(' (All)', '')] = df.pop(col)
             if '_INF' in query:
                 for col in df.columns:
                     if '_INF' in col:
@@ -115,9 +117,13 @@ def runQuery(argumentString):
             queries = ''.join(urlquery.replace(',', '_').split())
             if '*' in queries:
                 queries = queries.replace('*', 'WILDCARD')
+            if caseInsensitive is True:
+                word_case = 'caseInsensitive'
+            else:
+                word_case = 'caseSensitive'
             filename = '%s-%s-%d-%d-%d-%s.csv' % (queries, corpus, startYear,
                                                   endYear, smoothing,
-                                                  caseInsensitive)
+                                                  word_case)
             df.to_csv(filename, index=False)
             print 'Data saved to %s' % filename
         if notifyUser:
