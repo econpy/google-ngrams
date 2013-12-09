@@ -38,7 +38,7 @@ def plotXKCD(ngramCSVfile):
     prop = fm.FontProperties(fname='Humor-Sans.ttf')
 
     # Create the legend and change the font
-    legend = ax.legend(loc='best')
+    legend = ax.legend(loc='best', fontsize=9)
     for label in legend.get_texts():
         label.set_fontproperties(prop)
 
@@ -69,13 +69,19 @@ def plotXKCD(ngramCSVfile):
         fig.suptitle(title_queries, fontproperties=prop,
                      fontdict={'fontsize': 15, 'weight': 'heavy'})
     elif len(ngrams) >= 3:
+        import textwrap
         title_queries = ', '.join(ngrams[:-1]) + ', and %s' % ngrams[-1]
-        fig.suptitle(title_queries, fontproperties=prop,
-                     fontdict={'fontsize': 14, 'weight': 'heavy'})
+        if len(title_queries) > 80:
+            fig.subplots_adjust(top=0.8)
+            wrapped_title = '\n'.join(textwrap.wrap(title_queries, 80))
+            fig.suptitle(wrapped_title, fontproperties=prop,
+                         fontdict={'fontsize': 12, 'weight': 'heavy'})
+        else:
+            fig.suptitle(title_queries, fontproperties=prop,
+                         fontdict={'fontsize': 13, 'weight': 'heavy'})
     else:
         fig.suptitle('Google Ngrams', fontproperties=prop,
                      fontdict={'fontsize': 14, 'weight': 'heavy'})
-
     # Set tick labels text
     for label in ax.get_xticklabels():
         label.set_fontproperties(prop)
