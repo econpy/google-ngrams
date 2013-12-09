@@ -5,12 +5,9 @@ Here you'll find a basic python script to retrieve data behind the trajectories 
 
 <img src="https://s3.amazonaws.com/ngramplots/xkcd_demo3.png" height="225" width="300" align="right">
 
-Just type exactly the same string you would have typed at books.google.com/ngrams, and retrieve the data in csv format. By default, the data is printed on screen and saved to a file in the current directory.
+Just type exactly the same string you would have typed at books.google.com/ngrams, and retrieve the data in csv format. That is, multiple queries should be seperated by commas and quotation marks are not needed to match exact phrases -- just seperate the phrases using commas.
 
- - You can directly pass queries as arguments to the python script, such as "python getngrams.py awesome".
- - If you pass the '-quit' flag as an argument, the program will run once and quit without asking for more input, such as "python getngrams.py awesome, sauce -quit".
- - Searches are case-sensitive by default, but case-insenitive searches can be performed by adding the `-caseInsensitive` argument to your query.
- - Known Caveat: Quotation marks are removed from the input query.
+By default, the data is printed on screen and saved to a file in the current directory. Add the `-plot` option and an XKCD style plot will be saved in the current directory as well. Searches are case-sensitive by default, but case-insenitive searches can be performed by adding the `-caseInsensitive` argument to your query.
 
 
 ### Basic Examples ###
@@ -19,8 +16,8 @@ Here are some basic example uses of `getngrams.py`:
 
 ```
 python getngrams.py Albert Einstein, Charles Darwin
-python getngrams.py aluminum, copper, steel -noprint -quit
-python getngrams.py Pearl Harbor, Watergate -corpus=eng_2009 -nosave
+python getngrams.py aluminum, copper, steel -noprint
+python getngrams.py Pearl Harbor, Watergate -corpus=eng_2009
 python getngrams.py bells and whistles -startYear=1900 -endYear=2001 -smoothing=2
 python getngrams.py internet --startYear=1980 --endYear=2000 --corpus=eng_2012 -caseInsensitive
 ```
@@ -31,11 +28,11 @@ python getngrams.py internet --startYear=1980 --endYear=2000 --corpus=eng_2012 -
   * **endYear** [default: 2000]
   * **smoothing** [default: 3] *Smoothing parameter (integer)*
   * **caseInsensitive** *Return case-insensitive results*
+  * **plot** *Return an XKCD style plot as a .png file*
   * **alldata** *Return every column of available data***
   * **nosave** *Results will not be saved to file*
   * **noprint** *Results will not be printed on screen*
   * **help** *Prints this screen*
-  * **quit** *Quits after running query*
 
 \*\* This can be used with inflection, wildcard, and case-insensitive searches (otherwise it does nothing) where one column is the sum of some of the other columns (labeled with a column name ending in "(All)" or an asterisk for wildcard searches). In the [Google Ngram Viewer](http://books.google.com/ngrams), the columns whose sum makes up these column is viewable by right clicking on the ngram plot. In the `getngrams.py` script, these columns are dropped by default, but you can keep them by adding `-alldata` to your query.
 
@@ -49,8 +46,8 @@ When doing a wildcard search, use the `?` character instead of the `*` character
 
 ```
 python getngrams.py United ? --startYear=1800 --endYear=2000 -alldata
-python getngrams.py University of ? -quit
-python getngrams.py University of ?, ? State University -alldata -quit
+python getngrams.py University of ?
+python getngrams.py University of ?, ? State University -alldata
 ```
 
 ##### Modifier Searches #####
@@ -60,9 +57,9 @@ Modifier searches let you see how often one more modifies another word. The usua
 Modifier searches can be done using `getngrams.py`, but you must replace the `=>` operator with the `@` character.
 
 ```
-python getngrams.py car@fast -startYear=1900 -endYear=2000 -quit
-python getngrams.py car@fast -startYear=1900 -endYear=2000 -alldata -quit
-python getngrams.py drink@?_NOUN -startYear=1900 -endYear=2000 -alldata -quit
+python getngrams.py car@fast -startYear=1900 -endYear=2000
+python getngrams.py car@fast -startYear=1900 -endYear=2000 -alldata
+python getngrams.py drink@?_NOUN -startYear=1900 -endYear=2000 -alldata
 ```
 
 For more information on wildcard and modifier searches, take a look at the [About Ngram Viewer](https://books.google.com/ngrams/info) page for more in depth documentation.
@@ -70,7 +67,7 @@ For more information on wildcard and modifier searches, take a look at the [Abou
 ##### Other Examples #####
 
 ```
-python getngrams.py book ? hotel, book_INF a hotel --startYear=1920 --endYear=2000 -alldata -quit
+python getngrams.py book ? hotel, book_INF a hotel --startYear=1920 --endYear=2000 -alldata
 python getngrams.py read ?_DET book
 python getngrams.py _DET_ bright_ADJ rainbow
 python getngrams.py _START_ President ?_NOUN
@@ -90,7 +87,7 @@ eng_fiction_2012, eng_fiction_2009, eng_1m_2009
 There are 2 easy ways to create your own plots using a CSV file produced by running a query with `getngrams.py`. To demonstrate the 2 methods, we'll run the following query:
 
 ```bash
-python getngrams.py railroad,radio,television,internet -startYear=1900 -endYear=2000 -caseInsensitive -quit
+python getngrams.py railroad,radio,television,internet -startYear=1900 -endYear=2000 -caseInsensitive
 ```
 
 which produces the CSV file `railroad_radio_television_internet-eng_2012-1900-2000-3-caseInsensitive.csv`.
@@ -98,18 +95,23 @@ which produces the CSV file `railroad_radio_television_internet-eng_2012-1900-20
 
 ### #1: XKCD Style ###
 
-The first way to create a plot is to use the supplied `xkcd.py` script to generate awesome [XKCD](http://www.xkcd.com) style charts. `xkcd.py` takes an ngram CSV file as an argument and returns a *.png* file with an XKCD style plot.
+The first way to create a plot is to use the supplied `xkcd.py` script to generate awesome [XKCD](http://www.xkcd.com) style charts. However, there are two ways to use the script:
 
-```bash
-python xkcd.py railroad_radio_television_internet-eng_2012-1900-2000-3-caseInsensitive.csv
-```
-which produces the following plot:
+  1. Add the `-plot` option to your command when running `getngrams.py`.
 
-<div style="float: right"><img src="https://s3.amazonaws.com/ngramplots/xkcd_example.png"  /></div>
+  ```bash
+  python getngrams.py railroad,radio,television,internet -startYear=1900 -endYear=2000 -caseInsensitive -plot
+  ```
 
+  2. If you forgot to plot the data when you ran `getngrams.py` and retrieved the CSV file, just pass the CSV file as an argument to `xkcd.py` and a *.png* file with an XKCD style plot will be returned.
 
+  ```bash
+  python xkcd.py railroad_radio_television_internet-eng_2012-1900-2000-3-caseInsensitive.csv
+  ```
 
+Whether you plot the data right when you retrieve the CSV file by passing the `-plot` option or if you do it manually later, both methods produce the exact same chart:
 
+![](https://s3.amazonaws.com/ngramplots/xkcd_example.png)
 ### #2: Pandas DataFrame ###
 
 Another way to plot data from an ngram csv file is to read the csv file into a pandas DataFrame object and call the .plot() option on it.
@@ -126,7 +128,6 @@ df.plot(title='Railroad, Radio, Television, and Internet')
 ```
 
 ![](https://s3.amazonaws.com/ngramplots/pandas_simple.png)
-
 
 Although the automatic plot configuration in pandas does a pretty good job, you can also incorporate some matplotlib functionality to add some bits that are missing out of the automatic method, such as *ylabels*. We can also use matplotlib to add some cool modifications. For example, here I change the default color scheme, add more x-axis labels, use thicker lines in the plot, modify the font in the title, add percentage signs to the y-axis ticks:
 
@@ -152,7 +153,6 @@ plt.show()
 ```
 
 ![](https://s3.amazonaws.com/ngramplots/pandas_matplotlib.png)
-
 ### License ###
 None, feel free to distribute and modify.
 
