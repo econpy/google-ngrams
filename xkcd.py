@@ -18,7 +18,7 @@ def plotXKCD(ngramCSVfile):
         sp = line.strip().split(',')
         years.append(int(sp[0]))
         for i, s in enumerate(sp[1:]):
-            data_vals[i].append(float(s))
+            data_vals[i].append(float(s)*100) # Make percentage
     fin.close()
 
     # Set up a figure
