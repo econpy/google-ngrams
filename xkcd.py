@@ -91,6 +91,9 @@ def plotXKCD(ngramCSVfile):
     # Add percentage sign to y-axis ticks
     ax.yaxis.set_major_formatter(FuncFormatter(lambda y, pos=0: '%s%%' % y))
 
+    # Clean up x-axis ticks by letting autofmt_xdate() offsetting them
+    fig.autofmt_xdate()
+
     ax.axison = True
 
     fig.savefig('%s.png' % file_str, dpi=300)
