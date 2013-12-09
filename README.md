@@ -1,5 +1,9 @@
 # About #
-Here you'll find a basic python script to retrieve data behind the trajectories plotted on the [Google Ngram Viewer](http://books.google.com/ngrams).
+<img src="https://s3.amazonaws.com/ngramplots/xkcd_demo1.png" height="225" width="300" align="left">
+
+Here you'll find a basic python script to retrieve data behind the trajectories plotted on the [Google Ngram Viewer](http://books.google.com/ngrams) as well as another Python script to create [XKCD](http://www.xkcd.com) style plots with the data retrieved by the first script.
+
+<img src="https://s3.amazonaws.com/ngramplots/xkcd_demo3.png" height="225" width="300" align="right">
 
 Just type exactly the same string you would have typed at books.google.com/ngrams, and retrieve the data in csv format. By default, the data is printed on screen and saved to a file in the current directory.
 
@@ -76,9 +80,8 @@ python getngrams.py _ROOT_@will
 ##### Possible Corpora #####
 
 ```
-eng_2012, eng_2009, eng_us_2012, eng_us_2009, eng_gb_2012, eng_gb_2009,
-chi_sim_2012, chi_sim_2009, fre_2012, fre_2009, ger_2012, ger_2009,
-spa_2012, spa_2009, rus_2012, rus_2009, heb_2012, heb_2009, ita_2012,
+eng_2012, eng_2009, eng_us_2012, eng_us_2009, eng_gb_2012, eng_gb_2009, chi_sim_2012, chi_sim_2009, fre_2012,
+fre_2009, ger_2012, ger_2009, spa_2012, spa_2009, rus_2012, rus_2009, heb_2012, heb_2009, ita_2012,
 eng_fiction_2012, eng_fiction_2009, eng_1m_2009
 ```
 
@@ -100,9 +103,11 @@ The first way to create a plot is to use the supplied `xkcd.py` script to genera
 ```bash
 python xkcd.py railroad_radio_television_internet-eng_2012-1900-2000-3-caseInsensitive.csv
 ```
-which would generate the following plot:
+which produces the following plot:
 
-![](https://s3.amazonaws.com/ngramplots/xkcd_example.png)
+<div style="float: right"><img src="https://s3.amazonaws.com/ngramplots/xkcd_example.png"  /></div>
+
+
 
 
 ### #2: Pandas DataFrame ###
