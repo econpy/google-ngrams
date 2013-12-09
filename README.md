@@ -8,6 +8,16 @@ Just type exactly the same string you would have typed at books.google.com/ngram
  - Searches are case-sensitive by default, but case-insenitive searches can be performed by adding the `--caseInsensitive=on` argument to your query.
  - Known Caveat: Quotation marks are removed from the input query.
 
+
+## Create XKCD Style Plots ##
+```bash
+python getngrams.py railroad,radio,television,internet -startYear=1900 -endYear=2000 --caseInsensitive=on -quit
+python xkcd.py railroad_radio_television_internet-eng_2012-1900-2000-3-on.csv
+```
+
+![](https://s3.amazonaws.com/ngramplots/railroad_radio_television_internet-eng_2012-1900-2000-3-on.png)
+
+
 ### Basic Examples ###
 
 Here are some basic example uses of `getngrams.py`:
@@ -81,8 +91,8 @@ spa_2012, spa_2009, rus_2012, rus_2009, heb_2012, heb_2009, ita_2012,
 eng_fiction_2012, eng_fiction_2009, eng_1m_2009
 ```
 
-### Plotting ###
-One way to plot data from a csv file created from the getngrams.py script is
+### Other Plotting Options ###
+Another way to plot data from a csv file created from the getngrams.py script is
 to read the csv file into a pandas DataFrame object and call the .plot()
 option on it.
 
@@ -98,6 +108,7 @@ df.plot()
 
 which will produce an image like this:
 ![](https://s3.amazonaws.com/ngramplots/ngrams.png)
+
 
 ### License ###
 None, feel free to distribute and modify.
