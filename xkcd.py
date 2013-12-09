@@ -38,7 +38,7 @@ def plotXKCD(ngramCSVfile):
     prop = fm.FontProperties(fname='Humor-Sans.ttf')
 
     # Create the legend and change the font
-    legend = ax.legend()
+    legend = ax.legend(loc='best')
     for label in legend.get_texts():
         label.set_fontproperties(prop)
 
