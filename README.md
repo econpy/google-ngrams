@@ -8,14 +8,13 @@ Simply type the same query you would type at the [Google Ngram Viewer](http://bo
 
 <img src="https://s3.amazonaws.com/ngramplots/xkcd_demo3.png" height="375" width="500" align="left">
 
-##### Quick Gotchas #####
+#### Quick Gotchas ####
 
  * By default, the data is printed on screen and saved to a file in the working directory.
- * Add the `-plot` option to your query and an XKCD style plot will be saved as well.
- * Searches are case-sensitive by default, but case-insenitive searches can be performed by adding the `-caseInsensitive` argument to your query.
- * The syntax for [modifier](#modifier-searches) and [wildcard](#wildcard-searches) searches has been slightly modified to make the script work as a command line tool. See [below](#more-complicated-examples) for more information on these minor changes. 
+ * Add the `-plot` option to your query and an XKCD style plot like the one to the left will be saved in the working directory as well.
+ * Searches are case-sensitive by default. To perform case-insenitive searches, pass the `-caseInsensitive` option to your query. The result will be the sum of all common formats of the query (lowercase, uppercase, titlecase, etc).
+ * The syntax for [modifier](#modifier-searches) and [wildcard](#wildcard-searches) searches has been slightly modified in order to make the script work as a command line tool. See [below](#more-complicated-examples) for more information on these minor changes.
 
-A number of options can be passed with your queries. Alternatively, you can also just provide the ngrams of interest and your query will use the default values.
 
 ### Options ###
   * **corpus** [default: eng_2012] *This will run the query in CORPUS. Possible values are recapitulated below and [here](http://books.google.com/ngrams/info).*
@@ -101,38 +100,36 @@ There are 2 easy ways to create your own plots using a CSV file produced by runn
 python getngrams.py railroad,radio,television,internet -startYear=1900 -endYear=2000 -caseInsensitive
 ```
 
-which produces the CSV file `railroad_radio_television_internet-eng_2012-1900-2000-3-caseInsensitive.csv`.
-
-
-### #1: XKCD Style ###
+### Plotting w/ xkcd.py ###
 
 The first way to create a plot is to use the supplied `xkcd.py` script to generate awesome [XKCD](http://www.xkcd.com) style charts. However, there are two ways to use the script:
 
-  1. Add the `-plot` option to your command when running `getngrams.py`.
+  1. Add the `-plot` option to your command when running `getngrams.py`:
 
   ```bash
-  python getngrams.py railroad,radio,television,internet -startYear=1900 -endYear=2000 -caseInsensitive -plot
+  python getngrams.py railroad,radio,television,internet -startYear=1900 -endYear=2000 -plot -caseInsensitive
   ```
 
-  2. If you forgot to plot the data when you ran `getngrams.py` and retrieved the CSV file, just pass the CSV file as an argument to `xkcd.py` and a *.png* file with an XKCD style plot will be returned.
+  2. You can also use `xkcd.py` directly by passing the CSV file as an argument:
 
   ```bash
   python xkcd.py railroad_radio_television_internet-eng_2012-1900-2000-3-caseInsensitive.csv
   ```
 
-Whether you plot the data right when you retrieve the CSV file by passing the `-plot` option or if you do it manually later, both methods produce the exact same chart:
+Both methods produce the same chart:
 
 ![](https://s3.amazonaws.com/ngramplots/xkcd_example.png)
-### #2: Pandas DataFrame ###
 
-Another way to plot data from an ngram csv file is to read the csv file into a pandas DataFrame object and call the .plot() option on it.
 
-The easiest way to do this is to let pandas handle all the configuration of the plot automatically:
+### Plotting w/ Pandas ###
+
+Another way to plot data from an ngram CSV file is to read the file into a pandas DataFrame object and call the .plot() option on it. Here we do that, but also convert the data to percentages first and add a title to the plot:
 
 ```python
 from pandas import read_csv
-df = read_csv('railroad_radio_television_internet-eng_2012-1900-2000-3-caseInsensitive.csv', index_col=0, parse_dates=True)
-# Convert column values to percentages
+df = read_csv('railroad_radio_television_internet-eng_2012-1900-2000-3-caseInsensitive.csv',
+              index_col=0,
+              parse_dates=True)
 for col in df.columns:
     df[col] = [i*100 for i in df[col]]
 df.plot(title='Railroad, Radio, Television, and Internet')
@@ -140,30 +137,6 @@ df.plot(title='Railroad, Radio, Television, and Internet')
 
 ![](https://s3.amazonaws.com/ngramplots/pandas_simple.png)
 
-Although the automatic plot configuration in pandas does a pretty good job, you can also incorporate some matplotlib functionality to add some bits that are missing out of the automatic method, such as *ylabels*. We can also use matplotlib to add some cool modifications. For example, here I change the default color scheme, add more x-axis labels, use thicker lines in the plot, modify the font in the title, add percentage signs to the y-axis ticks:
-
-```python
-import matplotlib.pyplot as plt
-from matplotlib import cm
-from matplotlib.ticker import FuncFormatter
-from pandas import read_csv
-df = read_csv('railroad_radio_television_internet-eng_2012-1900-2000-3-caseInsensitive.csv', index_col=0, parse_dates=True)
-# Convert column values to percentages
-for col in df.columns:
-    df[col] = [i*100 for i in df[col]]
-ax = df.plot(x_compat=True, colormap=cm.jet, lw=3)
-# Set the title and axes labels
-ax.set_title('Railroad, Radio, Television, and Internet',
-             fontdict={'verticalalignment': 'bottom', 'fontsize': 18,
-                       'color': '#993300'})
-ax.set_ylabel('Percentage of Texts')
-ax.set_xlabel('Year')
-# Add percentage sign to y-axis ticks
-ax.yaxis.set_major_formatter(FuncFormatter(lambda y, pos=0: '%s%%' % y))
-plt.show()
-```
-
-![](https://s3.amazonaws.com/ngramplots/pandas_matplotlib.png)
 ### License ###
 None, feel free to distribute and modify.
 
