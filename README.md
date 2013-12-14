@@ -1,28 +1,23 @@
 # About #
-<img src="https://s3.amazonaws.com/ngramplots/xkcd_demo1.png" height="225" width="300" align="left">
 
-Here you'll find a basic python script to retrieve data behind the trajectories plotted on the [Google Ngram Viewer](http://books.google.com/ngrams) as well as another Python script to create [XKCD](http://www.xkcd.com) style plots with the data retrieved by the first script.
+Here you'll find a basic python script to retrieve data behind the trajectories plotted on the [Google Ngram Viewer](http://books.google.com/ngrams). A Python script that creates [XKCD](http://www.xkcd.com) style plots from the ngram CSV data is also included, making it simple to create some awesome looking plots!
 
-<img src="https://s3.amazonaws.com/ngramplots/xkcd_demo3.png" height="225" width="300" align="right">
+# Use #
 
-Just type exactly the same string you would have typed at books.google.com/ngrams, and retrieve the data in csv format. That is, multiple queries should be seperated by commas and quotation marks are not needed to match exact phrases -- just seperate the phrases using commas.
+Simply type the same query you would type at the [Google Ngram Viewer](http://books.google.com/ngrams) and retrieve the data in csv format.
 
-By default, the data is printed on screen and saved to a file in the current directory. Add the `-plot` option and an XKCD style plot will be saved in the current directory as well. Searches are case-sensitive by default, but case-insenitive searches can be performed by adding the `-caseInsensitive` argument to your query.
+<img src="https://s3.amazonaws.com/ngramplots/xkcd_demo3.png" height="300" width="400" align="left">
 
+##### Quick Gotchas #####
 
-### Basic Examples ###
+ * By default, the data is printed on screen and saved to a file in the working directory.
+ * Add the `-plot` option to your query and an XKCD style plot will be saved as well.
+ * Searches are case-sensitive by default, but case-insenitive searches can be performed by adding the `-caseInsensitive` argument to your query.
+ * The syntax for [modifier searches](#modifier-searches) and [wildcard searches](#wildcard-searches) has been slightly modified in order to make the script work as a command line tool. See [below](#more-complicated-examples) for more information on these minor changes. 
 
-Here are some basic example uses of `getngrams.py`:
+A number of options can be passed with your queries. Alternatively, you can also just provide the ngrams of interest and your query will use the default values.
 
-```
-python getngrams.py Albert Einstein, Charles Darwin
-python getngrams.py aluminum, copper, steel -noprint
-python getngrams.py Pearl Harbor, Watergate -corpus=eng_2009
-python getngrams.py bells and whistles -startYear=1900 -endYear=2001 -smoothing=2
-python getngrams.py internet --startYear=1980 --endYear=2000 --corpus=eng_2012 -caseInsensitive
-```
-
-### Flags ###
+### Options ###
   * **corpus** [default: eng_2012] *This will run the query in CORPUS. Possible values are recapitulated below and [here](http://books.google.com/ngrams/info).*
   * **startYear** [default: 1800]
   * **endYear** [default: 2000]
@@ -36,6 +31,22 @@ python getngrams.py internet --startYear=1980 --endYear=2000 --corpus=eng_2012 -
 
 \*\* This can be used with inflection, wildcard, and case-insensitive searches (otherwise it does nothing) where one column is the sum of some of the other columns (labeled with a column name ending in "(All)" or an asterisk for wildcard searches). In the [Google Ngram Viewer](http://books.google.com/ngrams), the columns whose sum makes up these column is viewable by right clicking on the ngram plot. In the `getngrams.py` script, these columns are dropped by default, but you can keep them by adding `-alldata` to your query.
 
+# Examples #
+
+There are tons of examples below that demonstrate of all kinds of available queries.
+
+### Basic Examples ###
+
+Here are some basic example uses of `getngrams.py`:
+
+```
+python getngrams.py Albert Einstein, Charles Darwin
+python getngrams.py aluminum, copper, steel -noprint
+python getngrams.py Pearl Harbor, Watergate -corpus=eng_2009
+python getngrams.py bells and whistles -startYear=1900 -endYear=2001 -smoothing=2
+python getngrams.py internet --startYear=1980 --endYear=2000 --corpus=eng_2012 -caseInsensitive
+```
+
 ### More Complicated Examples ###
 
 ##### Wildcard Searches #####
@@ -45,7 +56,7 @@ As in the full [Google Ngram Viewer](http://books.google.com/ngrams), you can al
 When doing a wildcard search, use the `?` character instead of the `*` character. Using an asterisk will cause the `getngrams.py` script to fail because your shell will expand the asterisk before Python has a chance to see it.
 
 ```
-python getngrams.py United ? --startYear=1800 --endYear=2000 -alldata
+python getngrams.py United ? --startYear=1850 --endYear=2000 -alldata
 python getngrams.py University of ?
 python getngrams.py University of ?, ? State University -alldata
 ```
