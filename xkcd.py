@@ -18,6 +18,7 @@ def plotXKCD(ngramCSVfile):
     fin.close()
 
     # Set up a figure
+    plt.xkcd(scale=2, randomness=2.75)
     fig = plt.Figure()
     canvas = FigureCanvasAgg(fig)
     num_ngrams = len(ngrams)
@@ -28,61 +29,38 @@ def plotXKCD(ngramCSVfile):
         for k, data, label in zip(range(num_ngrams), data_vals, ngrams):
             if k == 0:
                 ax.plot(years, data, label=label,
-                        color=cm.jet(1.*k/num_ngrams), lw=2)
+                        color=cm.jet(.9*k/num_ngrams), lw=2)
             else:
                 ax.plot(years, data, 'white', lw=6)
                 ax.plot(years, data, label=label,
-                        color=cm.jet(1.*k/num_ngrams), lw=2)
+                        color=cm.jet(.9*k/num_ngrams), lw=2)
 
     # Create the Humor-Sans font properties object
-    prop = fm.FontProperties(fname='Humor-Sans.ttf')
+    prop = fm.FontProperties(fname='Humor-Sans.ttf', size=17)
+
+    # Define axes min/max/center
+    xlim, ylim = ax.get_xlim(), ax.get_ylim()
+    xmid = (xlim[1] - xlim[0])/2 + xlim[0]
 
     # Create the legend and change the font
     legend = ax.legend(loc='best', fontsize=9)
     for label in legend.get_texts():
         label.set_fontproperties(prop)
 
-    # Set axis labels and text
-    ax.set_xlabel('Time', fontproperties=prop)
-    ax.set_ylabel('Percentage of Texts', fontproperties=prop)
+    # Don't show frame around legend
+    legend.draw_frame(False)
 
-    # Setup subtitles
-    file_str = ngramCSVfile.split('.')[0]
-    file_parts = file_str.split('-')
-    bottom_title = '%s - %s  /  ' % (file_parts[2], file_parts[3])
-    if file_str.endswith('caseInsensitive'):
-        bottom_title += 'Case Insensitive  /  '
-    else:
-        bottom_title += 'Case Sensitive  /  '
-    bottom_title += 'Corpus: %s  /  ' % file_parts[1]
-    bottom_title += 'Smoothing: %s' % file_parts[4]
-    ax.set_title(bottom_title, fontproperties=prop,
-                 fontdict={'verticalalignment': 'bottom', 'fontsize': 10,
-                           'color': '#787878'})
+    # Do not display top and right axes
+    ax.spines["right"].set_visible(False)
+    ax.spines["top"].set_visible(False)
 
-    # Setup title
-    if len(ngrams) == 1:
-        fig.suptitle(ngrams[0], fontproperties=prop,
-                     fontdict={'fontsize': 16, 'weight': 'heavy'})
-    elif len(ngrams) == 2:
-        title_queries = '%s and %s' % (ngrams[0], ngrams[1])
-        fig.suptitle(title_queries, fontproperties=prop,
-                     fontdict={'fontsize': 15, 'weight': 'heavy'})
-    elif len(ngrams) >= 3:
-        import textwrap
-        title_queries = ', '.join(ngrams[:-1]) + ', and %s' % ngrams[-1]
-        if len(title_queries) > 80:
-            fig.subplots_adjust(top=0.8)
-            wrapped_title = '\n'.join(textwrap.wrap(title_queries, 80))
-            fig.suptitle(wrapped_title, fontproperties=prop,
-                         fontdict={'fontsize': 12, 'weight': 'heavy'})
-        else:
-            fig.suptitle(title_queries, fontproperties=prop,
-                         fontdict={'fontsize': 13, 'weight': 'heavy'})
-    else:
-        fig.suptitle('Google Ngrams', fontproperties=prop,
-                     fontdict={'fontsize': 14, 'weight': 'heavy'})
+    # Remove unneeded ticks
+    ax.tick_params(axis='both', direction='out')
+    ax.get_xaxis().tick_bottom()
+    ax.get_yaxis().tick_left()
+
     # Set tick labels text
+    prop.set_size(11)
     for label in ax.get_xticklabels():
         label.set_fontproperties(prop)
     for label in ax.get_yticklabels():
@@ -91,12 +69,15 @@ def plotXKCD(ngramCSVfile):
     # Add percentage sign to y-axis ticks
     ax.yaxis.set_major_formatter(FuncFormatter(lambda y, pos=0: '%s%%' % y))
 
-    # Clean up x-axis ticks by letting autofmt_xdate() offsetting them
-    fig.autofmt_xdate()
+    # Set the ticks on each axes
+    ax.set_xticks([xlim[0], xmid, xlim[1]])
+    ax.set_yticks([ylim[1]])
 
-    ax.axison = True
+    # Change tick thickness
+    ax.xaxis.set_tick_params(width=1, length=4)
+    ax.yaxis.set_tick_params(width=1, length=4)
 
-    fig.savefig('%s.png' % file_str, dpi=300)
+    fig.savefig(ngramCSVfile.replace('.csv', '.png'), dpi=190)
 
 if __name__ == '__main__':
     import sys
