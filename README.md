@@ -6,14 +6,14 @@ Here you'll find a basic python script to retrieve data behind the trajectories 
 
 Simply type the same query you would type at the [Google Ngram Viewer](http://books.google.com/ngrams) and retrieve the data in csv format.
 
-<img src="https://s3.amazonaws.com/ngramplots/xkcd_demo3.png" height="300" width="400" align="left">
+<img src="https://s3.amazonaws.com/ngramplots/xkcd_demo3.png" height="375" width="500" align="left">
 
 ##### Quick Gotchas #####
 
  * By default, the data is printed on screen and saved to a file in the working directory.
  * Add the `-plot` option to your query and an XKCD style plot will be saved as well.
  * Searches are case-sensitive by default, but case-insenitive searches can be performed by adding the `-caseInsensitive` argument to your query.
- * The syntax for [modifier searches](#modifier-searches) and [wildcard searches](#wildcard-searches) has been slightly modified in order to make the script work as a command line tool. See [below](#more-complicated-examples) for more information on these minor changes. 
+ * The syntax for [modifier](#modifier-searches) and [wildcard](#wildcard-searches) searches has been slightly modified to make the script work as a CLI. See [below](#more-complicated-examples) for more information on these minor changes. 
 
 A number of options can be passed with your queries. Alternatively, you can also just provide the ngrams of interest and your query will use the default values.
 
