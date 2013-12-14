@@ -6,7 +6,7 @@ Here you'll find a basic python script to retrieve data behind the trajectories 
 
 Simply type the same query you would type at the [Google Ngram Viewer](http://books.google.com/ngrams) and retrieve the data in csv format.
 
-<img src="https://s3.amazonaws.com/ngramplots/xkcd_demo3.png" height="330" width="440" align="left">
+<img src="https://s3.amazonaws.com/ngramplots/xkcd_demo3.png" height="315" width="420" align="left">
 
 #### Quick Gotchas ####
 
