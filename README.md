@@ -28,7 +28,7 @@ Simply type the same query you would type at the [Google Ngram Viewer](http://bo
   * **noprint** *Results will not be printed on screen*
   * **help** *Prints this screen*
 
-\*\* This can be used with inflection, wildcard, and case-insensitive searches (otherwise it does nothing) where one column is the sum of some of the other columns (labeled with a column name ending in "(All)" or an asterisk for wildcard searches). In the [Google Ngram Viewer](http://books.google.com/ngrams), the columns whose sum makes up these column is viewable by right clicking on the ngram plot. In the `getngrams.py` script, these columns are dropped by default, but you can keep them by adding `-alldata` to your query.
+\*\* This can be used with inflection, wildcard, and case-insensitive searches (otherwise it does nothing) where one column is the sum of some of the other columns (labeled with a column name ending in "(All)" or an asterisk for wildcard searches). In the [Google Ngram Viewer](http://books.google.com/ngrams), the columns whose sum makes up this column is viewable by right clicking on the ngram plot. In the `getngrams.py` script, these columns are dropped by default, but you can keep them by adding `-alldata` to your query.
 
 # Examples #
 
