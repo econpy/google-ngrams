@@ -13,7 +13,7 @@ Simply type the same query you would type at the [Google Ngram Viewer](http://bo
  * By default, the data is printed on screen and saved to a file in the working directory.
  * Add the `-plot` option to your query and an XKCD style plot will be saved as well.
  * Searches are case-sensitive by default, but case-insenitive searches can be performed by adding the `-caseInsensitive` argument to your query.
- * The syntax for [modifier](#modifier-searches) and [wildcard](#wildcard-searches) searches has been slightly modified to make the script work as a CLI. See [below](#more-complicated-examples) for more information on these minor changes. 
+ * The syntax for [modifier](#modifier-searches) and [wildcard](#wildcard-searches) searches has been slightly modified to make the script work as a command line tool. See [below](#more-complicated-examples) for more information on these minor changes. 
 
 A number of options can be passed with your queries. Alternatively, you can also just provide the ngrams of interest and your query will use the default values.
 
