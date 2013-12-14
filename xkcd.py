@@ -29,11 +29,11 @@ def plotXKCD(ngramCSVfile):
         for k, data, label in zip(range(num_ngrams), data_vals, ngrams):
             if k == 0:
                 ax.plot(years, data, label=label,
-                        color=cm.jet(.9*k/num_ngrams), lw=2)
+                        color=cm.jet(1.*k/num_ngrams), lw=2)
             else:
                 ax.plot(years, data, 'white', lw=6)
                 ax.plot(years, data, label=label,
-                        color=cm.jet(.9*k/num_ngrams), lw=2)
+                        color=cm.jet(1.*k/num_ngrams), lw=2)
 
     # Create the Humor-Sans font properties object
     prop = fm.FontProperties(fname='Humor-Sans.ttf', size=17)
