@@ -2,7 +2,14 @@
 
 Here you'll find a basic python script to retrieve data behind the trajectories plotted on the [Google Ngram Viewer](http://books.google.com/ngrams). A Python script that creates [XKCD](http://www.xkcd.com) style plots from the ngram CSV data is also included, making it simple to create some awesome looking plots!
 
-# Use #
+# Dependencies
+
+* [matplotlib](http://github.com/matplotlib/matplotlib)
+* [pandas](http://github.com/pydata/pandas)
+* [requests](http://github.com/kennethreitz/requests)
+
+
+# Usage #
 
 Simply type the same query you would type at the [Google Ngram Viewer](http://books.google.com/ngrams) and retrieve the data in csv format.
 
@@ -138,8 +145,8 @@ df.plot(title='Railroad, Radio, Television, and Internet')
 ![](https://s3.amazonaws.com/ngramplots/pandas_simple.png)
 
 ### License ###
-None, feel free to distribute and modify.
+MIT License
 
-However, PLEASE do respect the terms of service of the Google Ngram Viewer while using this code. This code is meant to help viewers retrieve data behind a few queries, not bang at Google's servers with thousands of queries. The complete dataset can be freely downloaded [here](http://storage.googleapis.com/books/ngrams/books/datasetsv2.html). This code is not a Google product and is not endorsed by Google in any way.
+Moreover, PLEASE do respect the terms of service of the Google Ngram Viewer while using this code. This code is meant to help viewers retrieve data behind a few queries, not bang at Google's servers with thousands of queries. The complete dataset can be freely downloaded [here](http://storage.googleapis.com/books/ngrams/books/datasetsv2.html). This code is not a Google product and is not endorsed by Google in any way.
 
 With this in mind... happy plotting!
