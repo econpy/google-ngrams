@@ -4,7 +4,7 @@ Here you'll find a basic python script to retrieve data behind the trajectories 
 
 # Dependencies
 
-* [matplotlib](http://github.com/matplotlib/matplotlib)
+* [matplotlib](http://github.com/matplotlib/matplotlib) >= 1.3.1
 * [pandas](http://github.com/pydata/pandas)
 * [requests](http://github.com/kennethreitz/requests)
 
