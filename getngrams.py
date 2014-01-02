@@ -92,7 +92,11 @@ def runQuery(argumentString):
                 for col in df.columns:
                     if col.count('(All)') == 1:
                         df[col.replace(' (All)', '')] = df.pop(col)
-                    elif col.count(':') == 1 and col.count('_') >= 1:
+                    elif col.count(':chi_') == 1 or corpus.startswith('chi_'):
+                        pass
+                    elif col.count(':ger_') == 1 or corpus.startswith('ger_'):
+                        pass
+                    elif col.count(':heb_') == 1 or corpus.startswith('heb_'):
                         pass
                     elif col.count('(All)') == 0 and col != 'year':
                         df.pop(col)
