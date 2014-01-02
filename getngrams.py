@@ -90,10 +90,12 @@ def runQuery(argumentString):
         if not allData:
             if caseInsensitive is True:
                 for col in df.columns:
-                    if col.count('(All)') == 0 and col != 'year':
-                        df.pop(col)
-                    elif col.count('(All)') == 1:
+                    if col.count('(All)') == 1:
                         df[col.replace(' (All)', '')] = df.pop(col)
+                    elif col.count(':') == 1 and col.count('_') >= 1:
+                        pass
+                    elif col.count('(All)') == 0 and col != 'year':
+                        df.pop(col)
             if '_INF' in query:
                 for col in df.columns:
                     if '_INF' in col:
