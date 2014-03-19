@@ -99,7 +99,8 @@ def runQuery(argumentString):
                     elif col.count(':heb_') == 1 or corpus.startswith('heb_'):
                         pass
                     elif col.count('(All)') == 0 and col != 'year':
-                        df.pop(col)
+                        if col not in urlquery.split(','):
+                            df.pop(col)
             if '_INF' in query:
                 for col in df.columns:
                     if '_INF' in col:
