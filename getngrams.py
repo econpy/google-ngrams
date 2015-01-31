@@ -26,9 +26,13 @@ def getNgrams(query, corpus, startYear, endYear, smoothing, caseInsensitive):
         params['content'] = params['content'].replace('@', '=>')
     req = requests.get('http://books.google.com/ngrams/graph', params=params)
     res = re.findall('var data = (.*?);\\n', req.text)
-    data = {qry['ngram']: qry['timeseries'] for qry in literal_eval(res[0])}
-    df = DataFrame(data)
-    df.insert(0, 'year', list(range(startYear, endYear+1)))
+    if res:
+        data = {qry['ngram']: qry['timeseries']
+                for qry in literal_eval(res[0])}
+        df = DataFrame(data)
+        df.insert(0, 'year', list(range(startYear, endYear + 1)))
+    else:
+        df = DataFrame()
     return req.url, params['content'], df
 
 
@@ -113,8 +117,8 @@ def runQuery(argumentString):
             print((','.join(df.columns.tolist())))
             for row in df.iterrows():
                 try:
-                    print(('%d,' % int(row[1].values[0]) + \
-                          ','.join(['%.12f' % s for s in row[1].values[1:]])))
+                    print(('%d,' % int(row[1].values[0]) +
+                           ','.join(['%.12f' % s for s in row[1].values[1:]])))
                 except:
                     print((','.join([str(s) for s in row[1].values])))
         queries = ''.join(urlquery.replace(',', '_').split())
@@ -137,9 +141,9 @@ def runQuery(argumentString):
                 subprocess.call(['python', 'xkcd.py', filename])
             except:
                 if not toSave:
-                    print(('Currently, if you want to create a plot you ' + \
-                          'must also save the data. Rerun your query, ' + \
-                          'removing the -nosave option.'))
+                    print(('Currently, if you want to create a plot you ' +
+                           'must also save the data. Rerun your query, ' +
+                           'removing the -nosave option.'))
                 else:
                     print(('Plotting Failed: %s' % filename))
         if notifyUser:
