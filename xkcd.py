@@ -26,7 +26,7 @@ def plotXKCD(ngramCSVfile):
     # Plot the data
     ax = fig.add_subplot(1, 1, 1)
     if len(data_vals) >= 1:
-        for k, data, label in zip(range(num_ngrams), data_vals, ngrams):
+        for k, data, label in zip(list(range(num_ngrams)), data_vals, ngrams):
             if label.startswith('_'):  # The legend doesn't like labels that
                 label = label[1:]      # start with an underscore.
             if k == 0:

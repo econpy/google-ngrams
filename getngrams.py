@@ -26,9 +26,13 @@ def getNgrams(query, corpus, startYear, endYear, smoothing, caseInsensitive):
         params['content'] = params['content'].replace('@', '=>')
     req = requests.get('http://books.google.com/ngrams/graph', params=params)
     res = re.findall('var data = (.*?);\\n', req.text)
-    data = {qry['ngram']: qry['timeseries'] for qry in literal_eval(res[0])}
-    df = DataFrame(data)
-    df.insert(0, 'year', range(startYear, endYear+1))
+    if res:
+        data = {qry['ngram']: qry['timeseries']
+                for qry in literal_eval(res[0])}
+        df = DataFrame(data)
+        df.insert(0, 'year', list(range(startYear, endYear + 1)))
+    else:
+        df = DataFrame()
     return req.url, params['content'], df
 
 
@@ -67,9 +71,9 @@ def runQuery(argumentString):
         elif '-help' in param:
             printHelp = True
         else:
-            print 'Did not recognize the following argument: %s' % param
+            print(('Did not recognize the following argument: %s' % param))
     if printHelp:
-        print 'See README file.'
+        print('See README file.')
     else:
         if '*' in query and caseInsensitive is True:
             caseInsensitive = False
@@ -110,13 +114,13 @@ def runQuery(argumentString):
                     if '*' in col:
                         df.pop(col)
         if toPrint:
-            print ','.join(df.columns.tolist())
+            print((','.join(df.columns.tolist())))
             for row in df.iterrows():
                 try:
-                    print '%d,' % int(row[1].values[0]) + \
-                          ','.join(['%.12f' % s for s in row[1].values[1:]])
+                    print(('%d,' % int(row[1].values[0]) +
+                           ','.join(['%.12f' % s for s in row[1].values[1:]])))
                 except:
-                    print ','.join([str(s) for s in row[1].values])
+                    print((','.join([str(s) for s in row[1].values])))
         queries = ''.join(urlquery.replace(',', '_').split())
         if '*' in queries:
             queries = queries.replace('*', 'WILDCARD')
@@ -131,26 +135,26 @@ def runQuery(argumentString):
                 if '&gt;' in col:
                     df[col.replace('&gt;', '>')] = df.pop(col)
             df.to_csv(filename, index=False)
-            print 'Data saved to %s' % filename
+            print(('Data saved to %s' % filename))
         if toPlot:
             try:
                 subprocess.call(['python', 'xkcd.py', filename])
             except:
                 if not toSave:
-                    print 'Currently, if you want to create a plot you ' + \
-                          'must also save the data. Rerun your query, ' + \
-                          'removing the -nosave option.'
+                    print(('Currently, if you want to create a plot you ' +
+                           'must also save the data. Rerun your query, ' +
+                           'removing the -nosave option.'))
                 else:
-                    print 'Plotting Failed: %s' % filename
+                    print(('Plotting Failed: %s' % filename))
         if notifyUser:
-            print warningMessage
+            print(warningMessage)
 
 if __name__ == '__main__':
     argumentString = ' '.join(sys.argv[1:])
     if argumentString == '':
-        argumentString = raw_input('Enter query (or -help):')
+        argumentString = eval(input('Enter query (or -help):'))
     else:
         try:
             runQuery(argumentString)
         except:
-            print 'An error occurred.'
+            print('An error occurred.')
