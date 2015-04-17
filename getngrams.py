@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+# -*- coding: utf-8 -*
 from ast import literal_eval
 from pandas import DataFrame  # http://github.com/pydata/pandas
 import re
